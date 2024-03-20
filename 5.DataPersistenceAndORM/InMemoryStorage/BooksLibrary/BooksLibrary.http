@@ -1,0 +1,23 @@
+@BooksLibrary_HostAddress = http://localhost:5176
+
+GET {{BooksLibrary_HostAddress}}/books/
+Accept: application/json
+
+###
+
+POST {{BooksLibrary_HostAddress}}/books/
+Content-Type: application/json
+Accept-Language: en-US,en;q=0.5
+
+{
+  "author": [
+    {
+      "firstName": "Martin",
+      "lastName": "Fowler"
+    }
+  ],
+  "publicationDate": "2018-11-30",
+  "title": "Refactoring: Improving the Design of Existing Code (2nd Edition) (Addison-Wesley Signature Series (Fowler))"
+}
+
+###
