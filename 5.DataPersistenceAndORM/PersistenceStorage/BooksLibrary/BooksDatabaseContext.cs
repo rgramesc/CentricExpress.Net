@@ -12,8 +12,6 @@ public class BooksDatabaseTransactionalContext : IDisposable
 
     public BooksDatabaseTransactionalContext(IConfiguration configuration)
     {
-        //SqlMapper.AddTypeMap(typeof(DateOnly), (DbType) - 1, true);
-
         var configurationConnectionString = configuration.GetConnectionString("BooksLibraryDatabaseConnection");
         _databaseConnectionString = configurationConnectionString ??
                                     throw new ArgumentNullException(

@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Microsoft.Data.SqlClient;
 
 namespace BooksLibrary;
 
@@ -17,6 +18,8 @@ public class BooksLibraryDatabaseCreation
 
     public async Task InitiateDatabaseTablesWithData(bool shouldDeleteTables)
     {
+        CreateDatabaseIfNotExists();
+
         if (shouldDeleteTables)
         {
             await DeleteTables();
@@ -27,6 +30,37 @@ public class BooksLibraryDatabaseCreation
         await CreateAuthorsTable();
         await CreateBookAuthorTable();
         await SeedDataInDatabase();
+    }
+    
+    private void CreateDatabaseIfNotExists()
+    {
+        var databaseName = "BooksLibrary";
+        var dataDirectoryPath = AppDomain.CurrentDomain.GetData("DataDirectory").ToString();
+        var databaseFile = Path.Combine(dataDirectoryPath, $"{databaseName}.mdf");
+        if (File.Exists(databaseFile))
+        {
+            return;
+        }
+
+        using var connection = new SqlConnection(@"server=(LocalDb)\MSSQLLocalDB");
+        using var sqlConnection = connection;
+        connection.Open();
+
+        var sql = string.Format(@"
+        CREATE DATABASE
+            [{1}]
+        ON PRIMARY (
+           NAME=Test_data,
+           FILENAME = '{0}\{1}.mdf'
+        )
+        LOG ON (
+            NAME=Test_log,
+            FILENAME = '{0}\{1}.ldf'
+        )", dataDirectoryPath, databaseName
+        );
+
+        using var command = new SqlCommand(sql, connection);
+        command.ExecuteNonQuery();
     }
 
     private async Task CreateBooksTable()
