@@ -43,7 +43,7 @@ app.MapGet("/books", async (BookAuthorRepository bookAuthorRepository) =>
 app.MapPost("/books", async (BookApiDto bookDto, BookUnitOfWork bookUnitOfWork) =>
     {
         var author = new Author(bookDto.Author.FirstName, bookDto.Author.LastName);
-        var book = new Book(author, DateOnly.FromDateTime(bookDto.BookPublicationDate), bookDto.BookTitle);
+        var book = new Book(author, DateOnly.FromDateTime(bookDto.PublicationDate), bookDto.Title);
         await bookUnitOfWork.AddBook(book);
         return book;
     })
