@@ -34,7 +34,7 @@ public class BooksLibraryDatabaseCreation
     
     private void CreateDatabaseIfNotExists()
     {
-        var databaseName = "BooksLibrary";
+        var databaseName = "BooksLibraryWithMultipleAuthors";
         var dataDirectoryPath = AppDomain.CurrentDomain.GetData("DataDirectory").ToString();
         var databaseFile = Path.Combine(dataDirectoryPath, $"{databaseName}.mdf");
         if (File.Exists(databaseFile))
@@ -123,7 +123,7 @@ CONSTRAINT ""FK_BookAuthor_Books_AuthorId"" FOREIGN KEY (""AuthorId"") REFERENCE
             return;
         }
 
-        var cloudDataPatternsBook = new Book(new Author("Rob", "Vettor"), new DateOnly(2024, 1, 2),
+        var cloudDataPatternsBook = new Book(new List<Author> {new("Rob", "Vettor")}, new DateOnly(2024, 1, 2),
             "Architecting Cloud Native .NET Applications for Azure");
         await _bookUnitOfWork.AddBook(cloudDataPatternsBook);
     }
