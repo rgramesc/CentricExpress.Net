@@ -1,0 +1,6 @@
+@InMemoryList.BooksLibrary_HostAddress = http://localhost:5091
+
+GET {{InMemoryList.BooksLibrary_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
