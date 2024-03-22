@@ -1,6 +1,6 @@
-@BooksLibrary_HostAddress = http://localhost:7276
+@BooksLibrary_HostAddress = https://localhost:7276
 
-GET {{BooksLibrary_HostAddress}}/Books/
+GET {{BooksLibrary_HostAddress}}/books/
 Accept: application/json
 
 ###
