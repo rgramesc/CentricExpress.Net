@@ -40,5 +40,22 @@ namespace Infrastructure.Repositories
                 throw;
             }
         }
+
+        public async Task<bool> DeleteBook(Guid bookId)
+        {
+            await _booksDatabaseContext.CreateDatabaseTransaction();
+            try
+            {
+                var result = await _bookRepository.DeleteBook(bookId);
+
+                _booksDatabaseContext.CommitDatabaseTransaction();
+                return result;
+            }
+            catch
+            {
+                _booksDatabaseContext.RollbackDatabaseTransaction();
+                throw;
+            }
+        }
     }
 }
