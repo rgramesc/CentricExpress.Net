@@ -1,0 +1,6 @@
+@SOLID_HostAddress = http://localhost:5011
+
+GET {{SOLID_HostAddress}}/document/GetAllTypesOfDocuments
+Accept: application/json
+
+###
