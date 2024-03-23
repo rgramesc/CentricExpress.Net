@@ -1,0 +1,48 @@
+@BooksLibrary_HostAddress = https://localhost:7251
+
+GET {{BooksLibrary_HostAddress}}/books/
+Accept: application/json
+
+###
+
+POST {{BooksLibrary_HostAddress}}/books/
+Content-Type: application/json
+Accept-Language: en-US,en;q=0.5
+
+{
+  "authors": [{
+      "firstName": "Martin",
+      "lastName": "Fowler"
+    }],
+  "publicationDate": "2024-03-21T03:19:57.172Z",
+  "title": "Refactoring: Improving the Design of Existing Code (2nd Edition) (Addison-Wesley Signature Series (Fowler))"
+}
+
+###
+
+POST {{BooksLibrary_HostAddress}}/books/
+Content-Type: application/json
+Accept-Language: en-US,en;q=0.5
+
+{
+  "authors": [{
+      "firstName": "Erich",
+      "lastName": "Gamma"
+    },
+    {
+      "firstName": "Richard",
+      "lastName": "Heml"
+    },
+    {
+      "firstName": "Ralph",
+      "lastName": "Johnson"
+    },
+    {
+      "firstName": "John",
+      "lastName": "Vlissides"
+    }],
+  "publicationDate": "2024-03-21T03:19:57.172Z",
+  "title": "Refactoring: Improving the Design of Existing Code (2nd Edition) (Addison-Wesley Signature Series (Fowler))"
+}
+
+###
