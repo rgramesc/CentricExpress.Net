@@ -27,7 +27,7 @@ public class Book(Guid id, List<Author> authors, DateOnly publicationDate, strin
     {
         if (IsRemoved)
         {
-            return Result.Failure("The book is already marked as removed");
+            return Result.Failure("The book is already marked as removed.");
         }
 
         IsRemoved = true;

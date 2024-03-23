@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using BooksLibrary.Domain;
 using BooksLibrary.Infrastructure;
 using BooksLibrary.WebAPI.Contracts;
 using FluentAssertions;
@@ -33,7 +34,7 @@ namespace BooksLibrary.WebAPI.IntegrationTests
         }
 
         [Fact]
-        public async Task Post_EndpointWithExistingTitleReturnBadRequestWithErrorMessage()
+        public async Task Should_ReturnBadRequestWithErrorMessage_WhenAddBookWithExistingTitle()
         {
             // Arrange
             await SeedData();
@@ -62,7 +63,7 @@ namespace BooksLibrary.WebAPI.IntegrationTests
         }
 
         [Fact]
-        public async Task Post_EndpointWithNonExistingTitleReturnSuccessWithNewBook()
+        public async Task Should_ReturnSuccessWithNewBook_WhenAddBookWithNonExistingTitle()
         {
             // Arrange
             var url = "books";
@@ -105,6 +106,36 @@ namespace BooksLibrary.WebAPI.IntegrationTests
             newlyAddedBook.Title.Should().Be(bookApiDto.Title);
         }
 
+        [Fact]
+        public async Task Should_ReturnBadRequestWithError_WhenMarkBookAsRemovedForAlreadyRemovedBood()
+        {
+            // Arrange
+            var book = await AddBook(true);
+            var url = $"books?bookId={book.Id}";
+
+            // Act
+            var response = await _factory.Client.PatchAsync(url, null);
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            var error = await response.Content.ReadAsStringAsync();
+            error.Should().Be($"The book is already marked as removed.");
+        }
+
+        [Fact]
+        public async Task Should_ReturnSuccess_WhenMarkBookAsRemovedFoNotRemovedBood()
+        {
+            // Arrange
+            var book = await AddBook(false);
+            var url = $"books?bookId={book.Id}";
+
+            // Act
+            var response = await _factory.Client.PatchAsync(url, null);
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+        }
+
         public async Task InitializeAsync()
         {
             using var scope = _factory.Services.CreateScope();
@@ -121,9 +152,14 @@ namespace BooksLibrary.WebAPI.IntegrationTests
 
         private async Task SeedData()
         {
+            await AddBook(false);
+        }
+
+        private async Task<Book> AddBook(bool isBookMarkeAsRemoved)
+        {
             using var scope = _factory.Services.CreateScope();
             var booksLibraryDatabaseCreation = scope.ServiceProvider.GetRequiredService<BooksLibraryDatabaseCreation>();
-            await booksLibraryDatabaseCreation.SeedDataInDatabase();
+            return await booksLibraryDatabaseCreation.AddBook(isBookMarkeAsRemoved);
         }
     }
 }

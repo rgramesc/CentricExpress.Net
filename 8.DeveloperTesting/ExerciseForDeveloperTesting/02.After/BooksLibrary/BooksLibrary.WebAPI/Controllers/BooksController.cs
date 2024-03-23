@@ -33,13 +33,7 @@ namespace BooksLibrary.WebAPI.Controllers
             return Ok(addBookResult.Value);
         }
 
-        [HttpDelete("{id ?}")]
-        public async Task DeleteBook(Guid bookId)
-        {
-            await _bookUseCases.DeleteBook(bookId);
-        }
-
-        [HttpPatch("{id ?}")]
+        [HttpPatch]
         public async Task<ActionResult> MarkBookAsRemoved(Guid bookId)
         {
             var bookMarkingAsRemovedResult = await _bookUseCases.MarkBookAsRemoved(bookId);

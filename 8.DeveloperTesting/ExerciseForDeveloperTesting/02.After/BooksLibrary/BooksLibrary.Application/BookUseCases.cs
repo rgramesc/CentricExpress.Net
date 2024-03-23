@@ -94,7 +94,11 @@ namespace BooksLibrary.Application
             var authors = new List<Author>();
             booksInGroup.ForEach(bookWithAuthor => authors.Add(new Author(bookWithAuthor.AuthorId, bookWithAuthor.AuthorFirstName, bookWithAuthor.AuthorLastName)));
             var book = new Book(bookDto.BookId, authors, DateOnly.FromDateTime(bookDto.BookPublicationDate), bookDto.BookTitle, bookDto.BookIsRemoved);
-            book.MarkAsRemoved();
+            var result = book.MarkAsRemoved();
+            if (result.IsFailure)
+            {
+                return result;
+            }
 
             await _bookRepository.MarkBookAsRemoved(book);
 

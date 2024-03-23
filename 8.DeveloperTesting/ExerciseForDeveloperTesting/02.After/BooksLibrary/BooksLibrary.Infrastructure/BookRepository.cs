@@ -16,11 +16,12 @@ public class BookRepository : IBookRepository
 
     public async Task AddBook(Book book)
     {
-        var query = "INSERT INTO Books (Id, PublicationDate, Title) VALUES (@Id, @PublicationDate, @Title)";
+        var query = "INSERT INTO Books (Id, PublicationDate, Title, IsRemoved) VALUES (@Id, @PublicationDate, @Title, @IsRemoved)";
         var parameters = new DynamicParameters();
         parameters.Add("Id", book.Id, DbType.Guid);
         parameters.Add("PublicationDate", book.PublicationDate, DbType.Date);
         parameters.Add("Title", book.Title, DbType.String);
+        parameters.Add("IsRemoved", book.IsRemoved, DbType.Boolean);
 
         var connection = _booksDatabaseContext.DatabaseConnection;
         await connection.ExecuteAsync(query, parameters, _booksDatabaseContext.DatabaseTransaction);
@@ -45,7 +46,7 @@ public class BookRepository : IBookRepository
 
     public async Task MarkBookAsRemoved(Book book)
     {
-        var deleteBooksSql = "UPDATE Books SET IsRemoved = @IsRemoved WHERE Id = @BookId";
+        var deleteBooksSql = "UPDATE Books SET IsRemoved = @IsRemoved WHERE Id = @Id";
         var connection = _booksDatabaseContext.DatabaseConnection;
         var parameters = new DynamicParameters();
         parameters.Add("Id", book.Id, DbType.Guid);

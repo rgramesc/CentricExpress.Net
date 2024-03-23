@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Net;
 using BooksLibrary.Application.InfrastructureInterfaces;
 using BooksLibrary.Domain;
 using BooksLibrary.Infrastructure.Contracts;
@@ -29,7 +30,7 @@ INNER JOIN Authors authors on authors.Id = bookAuthors.AuthorId";
         return booksWithAuthors.ToList();
     }
 
-    public async Task<List<BookWithAuthorDataDto>> GetBookWithAuthors(Guid guid)
+    public async Task<List<BookWithAuthorDataDto>> GetBookWithAuthors(Guid bookId)
     {
         var getBookWithAuthorsSql = @"
 SELECT books.Id AS BookId, books.Title AS bookTitle, books.PublicationDate AS bookPublicationDate, books.IsRemoved AS bookIsRemoved,
@@ -40,7 +41,9 @@ INNER JOIN Authors authors on authors.Id = bookAuthors.AuthorId
 WHERE books.Id = @BookId";
 
         var connection = _booksDatabaseContext.DatabaseConnection;
-        var bookWithAuthors = await connection.QueryAsync<BookWithAuthorDataDto>(getBookWithAuthorsSql);
+        var parameters = new DynamicParameters();
+        parameters.Add("BookId", bookId, DbType.Guid);
+        var bookWithAuthors = await connection.QueryAsync<BookWithAuthorDataDto>(getBookWithAuthorsSql, parameters);
         return bookWithAuthors.ToList();
     }
 

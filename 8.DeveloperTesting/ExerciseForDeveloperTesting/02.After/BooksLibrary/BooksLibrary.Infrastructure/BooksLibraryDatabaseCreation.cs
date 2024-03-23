@@ -25,7 +25,7 @@ public class BooksLibraryDatabaseCreation
         await CreateBooksTable();
         await CreateAuthorsTable();
         await CreateBookAuthorTable();
-        await SeedDataInDatabase();
+        await SeedDataInDatabase(false);
     }
 
     public async Task DeleteDataInTables()
@@ -38,7 +38,7 @@ DELETE FROM Authors;
         await connection.ExecuteAsync(dropTablesSql);
     }
 
-    public async Task SeedDataInDatabase()
+    public async Task SeedDataInDatabase(bool isBookMarkeAsRemoved)
     {
         const string checkIfBooksExistsSql = "SELECT COUNT(ID) FROM BOOKS";
         var connection = _booksDatabaseContext.DatabaseConnection;
@@ -48,9 +48,17 @@ DELETE FROM Authors;
             return;
         }
 
-        var cloudDataPatternsBook = Book.CreateNewBook(new List<Author> { new("Rob", "Vettor") }, new DateOnly(2024, 1, 2),
-            "Architecting Cloud Native .NET Applications for Azure", new List<string>());
-        await _bookUnitOfWork.AddBook(cloudDataPatternsBook.Value);
+        var cloudDataPatternsBook = new Book(Guid.NewGuid(), new List<Author> { new("Rob", "Vettor") }, new DateOnly(2024, 1, 2),
+            "Architecting Cloud Native .NET Applications for Azure", isBookMarkeAsRemoved);
+        await _bookUnitOfWork.AddBook(cloudDataPatternsBook);
+    }
+
+    public async Task<Book> AddBook(bool isBookMarkeAsRemoved)
+    {
+        var cloudDataPatternsBook = new Book(Guid.NewGuid(), new List<Author> { new("Rob", "Vettor") }, new DateOnly(2024, 1, 2),
+            "Architecting Cloud Native .NET Applications for Azure", isBookMarkeAsRemoved);
+        await _bookUnitOfWork.AddBook(cloudDataPatternsBook);
+        return cloudDataPatternsBook;
     }
 
     private void CreateDatabaseIfNotExists(string databaseName)
