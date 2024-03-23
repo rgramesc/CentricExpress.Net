@@ -1,4 +1,5 @@
 using CentricExpress.BooksLibrary.Models;
+using InMemoryRepository.BooksLibrary.DataAccess;
 using InMemoryRepository.BooksLibrary.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,7 +13,11 @@ namespace InMemoryRepository.BooksLibrary.Controllers
 
         public BooksController()
         {
-            //initialize library service   
+            //TODO: after we inject the repository dependencies in services, pass the Service class as a parameter in the constructor
+            var booksRepository = new BooksRepository();
+            var authorsRepository = new AuthorsRepository();
+
+            _libraryService = new BooksLibraryService(booksRepository, authorsRepository);
         }
 
         [HttpGet(Name = "books")]
